@@ -1,0 +1,85 @@
+subscription downloadMaterialsSubscription($sourceRequestIds: [ID!]!) {
+  sr_downloadMaterials(sourceRequestIds: $sourceRequestIds) {
+    sourceRequestId
+    materials {
+      ...DownloadableMaterialFields
+    }
+  }
+}
+
+fragment DownloadableMaterialFields on SRMaterial {
+  createdDate
+  language
+  qcStatus
+  status
+  subType
+  type
+  videoLanguage
+  watermarkState
+  audioAmpAsset {
+    assetId {
+      id
+      version
+    }
+  }
+  rootAmpAsset {
+    assetId {
+      id
+      version
+    }
+  }
+  ampAsset {
+    assetId {
+      id
+    }
+  }
+  downloadRecords {
+    downloadAt
+    downloadBy
+  }
+  file {
+    name
+    location {
+      url
+    }
+  }
+  materialType {
+    category
+    displayName
+    type
+  }
+  movie {
+    internalTitle
+    movieId
+    filteredShowHierarchies(filter: VIEW_CURRENT_TITLE) {
+      isDefault
+      movieId
+      movie {
+        internalTitle
+        movieId
+      }
+      seasonHierarchy {
+        movieId
+        sequenceNumber
+        movie {
+          internalTitle
+          movieId
+        }
+        episodeHierarchy {
+          movieId
+          parentMovieId
+          sequenceNumber
+        }
+      }
+    }
+  }
+  packageWrapper {
+    id
+  }
+  qcRequest {
+    qcResult
+    result {
+      qcCompletedAt
+    }
+  }
+}
