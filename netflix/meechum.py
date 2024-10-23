@@ -12,10 +12,10 @@ from classes.log import Log
 
 class Meechum:
     def __init__(self, session_file='session.pkl'):
+        self.logger = Log().logger
         self.session_file = session_file
         self.session = requests.Session()
         self.load_session()
-        self.logger = Log().logger
         self.headers = {
             'accept': '*/*',
             'accept-language': 'en-US,en;q=0.9',
@@ -41,7 +41,7 @@ class Meechum:
             with open(self.session_file, 'rb') as f:
                 self.session = pickle.load(f)
                 for cookie in self.session.cookies:
-                    self.logger.info(cookie)
+                    self.logger.debug(cookie)
 
     def authenticate(self, redirect_url):
         def generate_random_string(length=32):
@@ -93,7 +93,7 @@ class Meechum:
 
             # Transfer cookies from the browser session to requests.Session
             for cookie in driver.get_cookies():
-                self.logger.info(cookie)
+                self.logger.debug(cookie)
                 self.session.cookies.set(cookie['name'], cookie['value'], domain=cookie.get('domain', ''))
             self.save_session()
         except Exception as e:

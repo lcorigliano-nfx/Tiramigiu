@@ -19,5 +19,12 @@ if 'sourceRequest' in search_response:
 else:
     logger.error("sourceRequest not found in search_response")
     sys.exit(1)
+import json
 
+assets = backlot.extract_asset_info(backlot.search_download_assets(request_ids))
+with open('assets_processed.json', 'w') as f:
+    json.dump(assets, f, indent=4)
+sys.exit(0)
+assets = backlot.extract_asset_info()
+available_assets = [asset for asset in assets if asset['status'] == 'ACTIVE']
 logger.info("Ending the application")
