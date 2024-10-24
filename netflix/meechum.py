@@ -83,19 +83,20 @@ class Meechum:
             success = False
 
             # Wait for the user to complete the login
+            visited_urls = set()
             while not success:
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
                 for request in driver.requests:
-                    if request.response:
-                        print(request.url)
-                        parsed_url = urlparse(request.url)
-                        if (parsed_url.netloc == urlparse(redirect_url).netloc and
-                            request.response.status_code in [302, 200] and
-                            "error_description" not in request.url):
-                            self.logger.info("Login successful via redirect.")
-                            request.abort()
-                            success = True
-                            break
+                    if request.url in visited_urls:
+                        continue
+                    visited_urls.add(request.url)
+                    print(request.url)
+                    parsed_url = urlparse(request.url)
+                    if (parsed_url.netloc == urlparse(redirect_url).netloc and
+                        "error_description" not in request.url):
+                        self.logger.info("Login successful via redirect.")
+                        request.abort()
+                        success = True
+                        break
 
             # After login, navigate to the redirect URL to capture cookies
             driver.get(redirect_url)
