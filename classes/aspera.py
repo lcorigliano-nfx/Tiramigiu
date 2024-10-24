@@ -38,7 +38,7 @@ class Aspera:
                 return user_key_path
             return '/Applications/Aspera Connect.app/Contents/Resources/asperaweb_id_dsa.openssh'
         elif system == 'Windows':  # Windows
-            return 'C:\\Program Files\\IBM\\Aspera Connect\\etc\\aspera_tokenauth_id_rsa'
+            return 'C:\\Program Files\\IBM\\Aspera Connect\\etc\\aspera_web_key.pem'
         elif system == 'Linux':  # Linux
             return os.path.expanduser('~/.aspera/connect/etc/asperaweb_id_dsa.openssh')
         else:
@@ -86,7 +86,7 @@ class Aspera:
             f"--file-pair-list={pair_list_filename}",
             self.download_folder
         ]
-        print(command)
+
         try:
             self.logger.info("Starting batch download...")
             subprocess.run(command, check=True)
