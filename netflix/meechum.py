@@ -18,7 +18,7 @@ from classes.log import Log
 class Meechum:
     def __init__(self, profile_dir: Optional[str] = None):
         self.logger = Log().get_logger(self.__class__.__name__)
-        self.profile_dir = profile_dir or './profile'
+        self.profile_dir = os.path.abspath(profile_dir or './profile')
         os.makedirs(self.profile_dir, exist_ok=True)
         self.session_file = os.path.join(self.profile_dir, 'session.pkl')
         self.session = requests.Session()
