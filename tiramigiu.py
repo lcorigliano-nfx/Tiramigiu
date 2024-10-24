@@ -63,8 +63,10 @@ class Tiramigiu:
             categorized_assets = {
                 'FINAL_PROXY': [],
                 'LOCKED_PROXY': [],
+                'PROXY_WITH_SUBTITLES': [],
                 'SERVICING_PROXY': [],
                 'DIALOGUE_LIST': [],
+                'PIVOT_LANGUAGE_DIALOGUE_LIST': [],
                 'PRINT_MASTER_5_1_CH': [],
                 'PRINT_MASTER_2_0_CH': [],
                 'DIALOG_MUSIC_AND_EFFECTS_5_1_CH': [],
@@ -75,12 +77,16 @@ class Tiramigiu:
                 material_type = asset['materialType']
                 if 'FINAL_PROXY' in material_type:
                     categorized_assets['FINAL_PROXY'].append(asset)
+                elif 'PROXY_WITH_SUBTITLES' in material_type:
+                    categorized_assets['PROXY_WITH_SUBTITLES'].append(asset)
                 elif 'LOCKED_PROXY' in material_type:
                     categorized_assets['LOCKED_PROXY'].append(asset)
                 elif 'SERVICING_PROXY' in material_type:
                     categorized_assets['SERVICING_PROXY'].append(asset)
                 elif 'DIALOGUE_LIST' in material_type:
                     categorized_assets['DIALOGUE_LIST'].append(asset)
+                elif 'PIVOT_LANGUAGE_DIALOGUE_LIST' in material_type:
+                    categorized_assets['PIVOT_LANGUAGE_DIALOGUE_LIST'].append(asset)
                 elif 'PRINT_MASTER' in material_type:
                     if '5_1_CH' in material_type:
                         categorized_assets['PRINT_MASTER_5_1_CH'].append(asset)
@@ -94,8 +100,9 @@ class Tiramigiu:
             for category, assets in categorized_assets.items():
                 self.logger.debug(f"Category: {category}, Count: {len(assets)}")
             # Select the best available assets
-            usable_assets.extend(categorized_assets['FINAL_PROXY'] or categorized_assets['LOCKED_PROXY'] or categorized_assets['SERVICING_PROXY'])
+            usable_assets.extend(categorized_assets['FINAL_PROXY'] or categorized_assets['PROXY_WITH_SUBTITLES'] or categorized_assets['LOCKED_PROXY'] or categorized_assets['SERVICING_PROXY'])
             usable_assets.extend(categorized_assets['DIALOGUE_LIST'])
+            usable_assets.extend(categorized_assets['PIVOT_LANGUAGE_DIALOGUE_LIST'])
             usable_assets.extend(categorized_assets['PRINT_MASTER_5_1_CH'] or categorized_assets['PRINT_MASTER_2_0_CH'])
             usable_assets.extend(categorized_assets['DIALOG_MUSIC_AND_EFFECTS_5_1_CH'] or categorized_assets['DIALOG_MUSIC_AND_EFFECTS_2_0_CH'])
             # Remove the 'status' field from the assets
@@ -115,7 +122,7 @@ class Tiramigiu:
                     json.dump(aspera_manifests, f, indent=4)
                 for session in aspera_manifests["session"]:
                     for batch in session["asperaBatches"]:
-                        aspera = Aspera(batch, download_folder="/Volumes/mne-qc/downloads/Tiramigiu")
+                        aspera = Aspera(batch, download_folder=f"/Volumes/mne-qc/downloads/Tiramigiu/", movie_id=movie_id)
                         aspera.start_batch_download()
                 self.send_slack_notification(f"Successfully downloaded materials for movie ID: {movie_id}")
             else:

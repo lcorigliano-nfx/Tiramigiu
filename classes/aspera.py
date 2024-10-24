@@ -6,12 +6,13 @@ import tempfile
 from typing import Dict, List, Tuple
 
 class Aspera:
-    def __init__(self, batch_info: Dict, download_folder: str = "./dl/"):
+    def __init__(self, batch_info: Dict, download_folder: str = "./dl/", movie_id: str = ""):
         self.batch_info = batch_info
         self.ascp_path = self.get_ascp_path()
         self.aspera_key_path = self.get_aspera_key_path()
         self.logger = Log().get_logger(self.__class__.__name__)
         self.download_folder = download_folder
+        self.movie_id = movie_id
         
     def get_ascp_path(self) -> str:
         """Get the path to the ascp executable based on the operating system."""
@@ -60,6 +61,8 @@ class Aspera:
             
             # Construct the destination path
             destination_filename = file_info['destinationPath'].strip('/')
+            if self.movie_id:
+                destination_filename = f"{self.movie_id}_{destination_filename}"
             destination_dir = os.path.abspath(os.path.join(self.download_folder, destination_filename))
             os.makedirs(os.path.dirname(destination_dir), exist_ok=True)
             

@@ -129,6 +129,11 @@ class Backlot(Service):
               material_filter["fileName"] = file_info['name']
           if movie_info:
             material_filter["movieId"] = movie_info.get('movieId')
+          package_info = material.get('packageWrapper', {})
+          if package_info and package_info["id"]:
+            material_filter["packageId"] = package_info["id"]
+          if "packageId" in material_filter and "ampAssetId" in material_filter:
+            del material_filter["ampAssetId"]
 
           asset_info = {
             'status': status,
@@ -138,6 +143,7 @@ class Backlot(Service):
             'fileInfo': file_info,
             'materialFilter': material_filter
           }
+
           assets_info.append(asset_info)
 
     return assets_info
