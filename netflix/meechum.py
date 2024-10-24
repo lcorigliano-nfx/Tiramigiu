@@ -57,7 +57,6 @@ class Meechum:
 
         params = {
             'client_id': 'sourcedeliveriesui',
-            'scope': 'default+sourcedeliveriesui+studiogateway+jet_sap_sap_ui_backlot_ui-prod+studioplayback+e2eToken',
             'response_type': 'code',
             'redirect_uri': redirect_url,
             'state': generate_random_string(),
@@ -65,7 +64,7 @@ class Meechum:
             'auth_strategy': 'NetflixPartnerLogin'
         }
         base_url = 'https://meechum.netflix.com/as/authorization.oauth2'
-        auth_url = f"{base_url}?{requests.compat.urlencode(params)}"
+        auth_url = f"{base_url}?{requests.compat.urlencode(params)}&scope=default+sourcedeliveriesui+studiogateway+jet_sap_sap_ui_backlot_ui-prod+studioplayback+e2eToken"
 
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-infobars")
@@ -88,6 +87,7 @@ class Meechum:
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
                 for request in driver.requests:
                     if request.response:
+                        print(request.url)
                         parsed_url = urlparse(request.url)
                         if (parsed_url.netloc == urlparse(redirect_url).netloc and
                             request.response.status_code in [302, 200] and
