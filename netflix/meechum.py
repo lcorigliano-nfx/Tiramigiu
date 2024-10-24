@@ -2,6 +2,7 @@ import os
 import pickle
 import random
 import string
+import platform
 from typing import Optional
 from urllib.parse import urlparse
 
@@ -73,6 +74,9 @@ class Meechum:
         options.add_argument("--no-sandbox")
         options.add_argument(f"--user-data-dir={self.profile_dir}")
         options.add_argument(f"--app={auth_url}")
+        system = platform.system()
+        if system == 'Windows':
+            options.binary_location = r'.\chrome-bin\chrome.exe'
 
         driver = webdriver.Chrome(options=options)
         try:
