@@ -23,7 +23,7 @@ class Aspera:
                 return user_app_path
             return '/Applications/Aspera Connect.app/Contents/Resources/ascp'
         elif system == 'Windows':  # Windows
-            return r'C:\Program Files (x86)\Aspera\Aspera Connect\bin\ascp.exe'
+            return r'C:\Program Files\IBM\Aspera Connect\bin\ascp.exe'
         elif system == 'Linux':  # Linux
             return os.path.expanduser('~/.aspera/connect/bin/ascp')
         else:
