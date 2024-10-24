@@ -38,7 +38,7 @@ class Aspera:
                 return user_key_path
             return '/Applications/Aspera Connect.app/Contents/Resources/asperaweb_id_dsa.openssh'
         elif system == 'Windows':  # Windows
-            return '..\\asperakey.openssh'
+            return os.path.abspath('..\\asperakey.openssh')
         elif system == 'Linux':  # Linux
             return os.path.expanduser('~/.aspera/connect/etc/asperaweb_id_dsa.openssh')
         else:
@@ -84,7 +84,7 @@ class Aspera:
             f"--user={aspera_user}",
             "--overwrite=diff",
             f"--file-pair-list={pair_list_filename}",
-            self.download_folder
+            self.download_folder.replace('\\', '/')
         ]
 
         try:
