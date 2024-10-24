@@ -38,7 +38,7 @@ class Aspera:
                 return user_key_path
             return '/Applications/Aspera Connect.app/Contents/Resources/asperaweb_id_dsa.openssh'
         elif system == 'Windows':  # Windows
-            return r'C:\Program Files (x86)\Aspera\Aspera Connect\etc\asperaweb_id_dsa.openssh'
+            return r'C:\Program Files\IBM\Aspera Connect\etc\asperaweb_id_dsa.openssh'
         elif system == 'Linux':  # Linux
             return os.path.expanduser('~/.aspera/connect/etc/asperaweb_id_dsa.openssh')
         else:
