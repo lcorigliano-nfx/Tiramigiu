@@ -5,6 +5,7 @@ from netflix.meechum import Meechum
 from netflix.backlot import Backlot
 from classes.log import Log
 from classes.aspera import Aspera
+import platform
 
 class Tiramigiu:
     def __init__(self):
@@ -122,7 +123,12 @@ class Tiramigiu:
                     json.dump(aspera_manifests, f, indent=4)
                 for session in aspera_manifests["session"]:
                     for batch in session["asperaBatches"]:
-                        aspera = Aspera(batch, download_folder=f"/Volumes/mne-qc/downloads/Tiramigiu/", movie_id=movie_id)
+                        system = platform.system()
+                        if system == 'Darwin':
+                            download_folder = f"/Volumes/mne-qc/downloads/Tiramigiu/"
+                        elif system == 'Windows':
+                            download_folder = f"C:\\Volumes\\nflx-post-services\\mne-qc\\downloads\\Tiramigiu\\"
+                        aspera = Aspera(batch, download_folder=download_folder, movie_id=movie_id)
                         aspera.start_batch_download()
                 self.send_slack_notification(f"Successfully downloaded materials for movie ID: {movie_id}")
             else:
