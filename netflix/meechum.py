@@ -76,8 +76,10 @@ class Meechum:
         system = platform.system()
         if system == 'Windows':
             options.binary_location = r'.\chrome-bin\chrome.exe'
-
-        driver = webdriver.Chrome(options=options)
+            
+            driver = webdriver.Chrome(options=options, seleniumwire_options={'request_storage_base_dir': r'.\sw-tmp'})
+        else:
+            driver = webdriver.Chrome(options=options)
         try:
             self.logger.info("Attempting automatic authentication...")
             success = False
