@@ -1,19 +1,25 @@
-import requests
-import pickle
 import os
-from seleniumwire import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from urllib.parse import urlparse
+import pickle
 import random
 import string
+from typing import Optional
+from urllib.parse import urlparse
+
+import requests
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from seleniumwire import webdriver
+
 from classes.log import Log
 
+
 class Meechum:
-    def __init__(self, session_file='session.pkl'):
-        self.logger = Log().logger
-        self.session_file = session_file
+    def __init__(self, profile_dir: Optional[str] = None):
+        self.logger = Log().get_logger(self.__class__.__name__)
+        self.profile_dir = profile_dir or './profile'
+        os.makedirs(self.profile_dir, exist_ok=True)
+        self.session_file = os.path.join(self.profile_dir, 'session.pkl')
         self.session = requests.Session()
         self.load_session()
         self.headers = {
@@ -32,19 +38,20 @@ class Meechum:
         }
         self.session.headers.update(self.headers)
 
-    def save_session(self):
+    def save_session(self) -> None:
         with open(self.session_file, 'wb') as f:
             pickle.dump(self.session, f)
 
-    def load_session(self):
+    def load_session(self) -> None:
         if os.path.exists(self.session_file):
             with open(self.session_file, 'rb') as f:
                 self.session = pickle.load(f)
+                self.logger.debug("Loaded cookies:")
                 for cookie in self.session.cookies:
                     self.logger.debug(cookie)
 
-    def authenticate(self, redirect_url):
-        def generate_random_string(length=32):
+    def authenticate(self, redirect_url: str) -> None:
+        def generate_random_string(length: int = 32) -> str:
             return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
         params = {
@@ -64,7 +71,7 @@ class Meechum:
         options.add_experimental_option("excludeSwitches", ['enable-automation'])
         options.add_argument("--window-size=640,800")
         options.add_argument("--no-sandbox")
-        options.add_argument("--user-data-dir=./profile")
+        options.add_argument(f"--user-data-dir={self.profile_dir}")
         options.add_argument(f"--app={auth_url}")
 
         driver = webdriver.Chrome(options=options)

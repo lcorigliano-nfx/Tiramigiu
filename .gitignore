@@ -5,6 +5,8 @@ __pycache__/
 profile
 session.pkl
 .venv
+*assets*.json
+aspera*.json
 # C extensions
 *.so
 dl
